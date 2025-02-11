@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Request</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ffe6e6;
+        }
+        .container {
+            text-align: center;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .yes-button {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        .no-button {
+            background-color: #4a4a4a;
+            color: white;
+        }
+        .emoji {
+            font-size: 100px;
+            position: absolute;
+            animation: move 2s infinite;
+        }
+        @keyframes move {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(100px, 100px); }
+            50% { transform: translate(0, 200px); }
+            75% { transform: translate(-100px, 100px); }
+            100% { transform: translate(0, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="main-container">
+        <h1>Will you be my Valentine? 🌹</h1>
+        <div>
+            <button class="button yes-button" onclick="acceptValentine()">Yes</button>
+            <button class="button no-button" onclick="rejectValentine()" id="noBtn">No</button>
+        </div>
+    </div>
+
+    <script>
+        let rejectCount = 0;
+        let noButtonClicks = 0;
+        const noButtonTexts = [
+            "awww... please???",
+            "why no??? :(((",
+            "plsss mika?? :))))",
+            "hey!!!!",
+            "PLSSS",
+            "no?",
+            "u sure?",
+            "pretty please :))))",
+            ":(((", 
+            "no?",
+            "really? noo???"
+        ];
+
+        function acceptValentine() {
+            document.body.innerHTML = `
+                <div class="container">
+                    <h1>Yay! I Love You!  💝 </h1>
+                    <p style="font-size: 16px; margin-left: 20px; margin-top: -10px; color: #666;">see ya on feb 14! ;)<br>- Trenzy</p>
+                    <img src="https://i.pinimg.com/736x/e7/06/66/e70666971a3f8f853a7ab1a88b1401bb.jpg" alt="Cat with rose" style="max-width: 400px; margin-top: 20px;">
+                </div>
+            `;
+        }
+
+        function rejectValentine() {
+            noButtonClicks++;
+            
+            if (noButtonClicks <= 3) {
+                if (rejectCount === 0) {
+                    showEmoji('😠');
+                    setTimeout(() => {
+                        removeEmojis();
+                        askAgain();
+                    }, 3000);
+                } else if (rejectCount === 1) {
+                    showMultipleEmojis('😢');
+                    setTimeout(() => {
+                        removeEmojis();
+                        askFinal();
+                    }, 3000);
+                } else {
+                    makeNoButtonDodge();
+                }
+                rejectCount++;
+            } else {
+                const noBtn = document.getElementById('noBtn');
+                const yesBtn = document.querySelector('.yes-button');
+                
+                if (noButtonClicks - 4 < noButtonTexts.length) {
+                    noBtn.textContent = noButtonTexts[noButtonClicks - 4];
+                } else {
+                    noBtn.style.display = 'none'; // Make the no button disappear
+                }
+                
+                // Make yes button bigger until it fills screen
+                const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+                yesBtn.style.fontSize = (currentSize + 20) + 'px';
+                yesBtn.style.padding = (currentSize + 20) + 'px';
+                yesBtn.style.position = 'fixed';
+                yesBtn.style.top = '50%';
+                yesBtn.style.left = '50%';
+                yesBtn.style.transform = 'translate(-50%, -50%)';
+                
+                if (currentSize > 100) {
+                    yesBtn.style.width = '100vw';
+                    yesBtn.style.height = '100vh';
+                    yesBtn.style.margin = '0';
+                    yesBtn.style.borderRadius = '0';
+                }
+                
+                makeNoButtonDodge();
+            }
+        }
+
+        function showEmoji(emoji) {
+            const emojiDiv = document.createElement('div');
+            emojiDiv.className = 'emoji';
+            emojiDiv.textContent = emoji;
+            document.body.appendChild(emojiDiv);
+        }
+
+        function showMultipleEmojis(emoji) {
+            for (let i = 0; i < 20; i++) {
+                showEmoji(emoji);
+            }
+        }
+
+        function removeEmojis() {
+            const emojis = document.querySelectorAll('.emoji');
+            emojis.forEach(emoji => emoji.remove());
+        }
+
+        function askAgain() {
+            document.getElementById('main-container').innerHTML = `
+                <h1>Will you be my Valentine? 🌸</h1>
+                <div>
+                    <button class="button yes-button" onclick="acceptValentine()">Yes</button>
+                    <button class="button no-button" onclick="rejectValentine()" id="noBtn">No</button>
+                </div>
+            `;
+        }
+
+        function askFinal() {
+            document.getElementById('main-container').innerHTML = `
+                <h1>WILL YOU BE MY VALENTINE?! 🌸🌺🌹🌷</h1>
+                <div>
+                    <button class="button yes-button" onclick="acceptValentine()">Yes</button>
+                    <button class="button no-button" onclick="rejectValentine()" id="noBtn">No</button>
+                </div>
+            `;
+        }
+
+        function makeNoButtonDodge() {
+            const noBtn = document.getElementById('noBtn');
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = Math.random() * (window.innerWidth - noBtn.offsetWidth) + 'px';
+            noBtn.style.top = Math.random() * (window.innerHeight - noBtn.offsetHeight) + 'px';
+        }
+    </script>
+</body>
+</html>
